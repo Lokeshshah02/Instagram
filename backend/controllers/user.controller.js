@@ -164,10 +164,7 @@ export const getSuggestedUsers = async (req, res) => {
     console.error(error);
   }
 };
-try {
-} catch (error) {
-  console.error(error);
-}
+
 export const followOrUnfollow = async (req, res) => {
   try {
     const followKarneWale = req.id;
