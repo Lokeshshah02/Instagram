@@ -3,6 +3,7 @@ import cors from "cors";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import connectDB from "./utlis/db.js";
+import userRoute from "./routes/user.route.js";
 
 dotenv.config({});
 
@@ -16,14 +17,12 @@ const corsOptions = {
   origin: "http://localhost:5137",
   credentials: true,
 };
-
 app.use(cors(corsOptions));
 
-const PORT = process.env.PORT || 3000;
+//user api
+app.use("/api/v1/user", userRoute);
 
-app.get("/", (req, res) => {
-  return res.status(200).json({ message: "hello" });
-});
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   connectDB();
