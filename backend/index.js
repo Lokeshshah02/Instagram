@@ -16,7 +16,7 @@ app.use(cookieParser()); //using it to store the cookies on frontend
 app.use(urlencoded({ extended: true }));
 
 const corsOptions = {
-  origin: "http://localhost:5137",
+  origin: "http://localhost:5173",
   credentials: true,
 };
 app.use(cors(corsOptions));
