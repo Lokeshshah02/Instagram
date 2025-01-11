@@ -6,9 +6,8 @@ import { toast } from "sonner";
 import { Link, useNavigate } from "react-router-dom";
 import { Loader2 } from "lucide-react";
 
-const Singup = () => {
+const Login = () => {
   const [input, setInput] = useState({
-    username: "",
     email: "",
     password: "",
   });
@@ -27,7 +26,7 @@ const Singup = () => {
     try {
       setLoading(true);
       const res = await axios.post(
-        "http://localhost:8000/api/v1/user/register",
+        "http://localhost:8000/api/v1/user/login",
         input,
         {
           headers: {
@@ -38,10 +37,9 @@ const Singup = () => {
       );
 
       if (res.data.success) {
-        navigate("/");
         toast.success(res.data.message);
+        navigate("/");
         setInput({
-          username: "",
           email: "",
           password: "",
         });
@@ -63,18 +61,8 @@ const Singup = () => {
         <div className="my-4">
           <h1 className="text-center font-bold test-xl">LOGO</h1>
           <p className="text-sm text-center">
-            Signup to see photos & videos from your friends
+            Login to see photos & videos from your friends
           </p>
-        </div>
-        <div>
-          <span className="font-medium">Username</span>
-          <Input
-            type="text"
-            name="username"
-            value={input.username}
-            onChange={changeEventHandler}
-            className="focus-visible:ring-transparent my-2"
-          />
         </div>
         <div>
           <span className="font-medium">Email</span>
@@ -105,9 +93,9 @@ const Singup = () => {
           <Button type="submit">Login</Button>
         )}
         <span className="text-center">
-          Already have an account?{" "}
-          <Link to="/login" className="text-blue-600">
-            Login
+          Don't have an account?{" "}
+          <Link to="/signup" className="text-blue-600">
+            SignUp
           </Link>
         </span>
       </form>
@@ -115,4 +103,4 @@ const Singup = () => {
   );
 };
 
-export default Singup;
+export default Login;
