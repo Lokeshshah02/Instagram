@@ -1,9 +1,9 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import Singup from "./components/Signup";
 import Login from "./components/Login";
-import MainLayout from "./components/ui/MainLayout";
-import { Home } from "lucide-react";
 import Profile from "./components/Profile";
+import MainLayout from "./components/MainLayout";
+import Home from "./components/Home";
 
 function App() {
   const browserRouter = createBrowserRouter([

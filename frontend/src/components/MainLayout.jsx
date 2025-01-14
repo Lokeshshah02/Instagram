@@ -1,14 +1,14 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import LeftSidebar from "../LeftSidebar";
+import LeftSidebar from "./LeftSidebar";
 
 const MainLayout = () => {
   return (
-    <div>
+    <div className="flex h-screen">
       <LeftSidebar />
-      {/* outlet lets the child render example the profile component */}
-
-      <Outlet />
+      <div className="flex-grow">
+        <Outlet />
+      </div>
     </div>
   );
 };
