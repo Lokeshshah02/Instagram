@@ -7,38 +7,26 @@ import {
   Search,
   TrendingUp,
 } from "lucide-react";
-import React from "react";
+import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { toast } from "sonner";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
-const sidebarItems = [
-  { icon: <Home />, text: "Home" },
-  { icon: <Search />, text: "Search" },
-  { icon: <TrendingUp />, text: "Explore" },
-  { icon: <MessageCircle />, text: "Message" },
-  { icon: <Heart />, text: "Notifications" },
-  { icon: <Plus />, text: "Create" },
-  {
-    icon: (
-      <Avatar className="w-7 h-7">
-        <AvatarImage src="https://github.com/shadcn.png" />
-        <AvatarFallback>CN</AvatarFallback>
-      </Avatar>
-    ),
-    text: "Profile",
-  },
-  { icon: <LogOut />, text: "Logout" },
-];
+import { useDispatch, useSelector } from "react-redux";
+import { setAuthUser } from "@/redux/authSlice";
+import CreatePost from "./CreatePost";
 
 const LeftSidebar = () => {
   const navigate = useNavigate();
+  const {user} = useSelector(store => store.auth)
+  const dispatch = useDispatch()
+  const [open, setOpen] = useState(false);
 
   const logoutHandler = async () => {
     try {
       const res = await axios.get("http://localhost:8000/api/v1/user/logout");
       if (res.data.success) {
+        dispatch(setAuthUser(null))
         navigate("/login");
         toast.success(res.data.message);
       }
@@ -48,8 +36,33 @@ const LeftSidebar = () => {
   };
 
   const sidebarHandler = (textType) => {
-    if (textType === "Logout") logoutHandler();
+    if (textType === "Logout")
+      {
+      logoutHandler();
+      }
+      else if(textType === "Create"){
+        setOpen(true)
+      }
   };
+
+  const sidebarItems = [
+    { icon: <Home />, text: "Home" },
+    { icon: <Search />, text: "Search" },
+    { icon: <TrendingUp />, text: "Explore" },
+    { icon: <MessageCircle />, text: "Message" },
+    { icon: <Heart />, text: "Notifications" },
+    { icon: <Plus />, text: "Create" },
+    {
+      icon: (
+        <Avatar className="w-7 h-7">
+          <AvatarImage src={user?.profilePicture} />
+          <AvatarFallback>CN</AvatarFallback>
+        </Avatar>
+      ),
+      text: "Profile",
+    },
+    { icon: <LogOut />, text: "Logout" },
+  ];
 
   return (
     <div className="px-4 border-r border-gray-300 w-[16%] h-screen">
@@ -70,6 +83,9 @@ const LeftSidebar = () => {
           })}
         </div>
       </div>
+      {
+        <CreatePost open={open} setOpen={setOpen}/>
+      }
     </div>
   );
 };
