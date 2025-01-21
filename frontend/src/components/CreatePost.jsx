@@ -8,13 +8,19 @@ import { readFileAsDataURL } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+import { setPosts } from "@/redux/postSlice";
 
 const CreatePost = ({ open, setOpen }) => {
   const [file, setFile] = useState("");
   const [caption, setCaption] = useState("");
   const [loading, setLoading] = useState(false);
   const [imagePreview, setImagePreview] = useState("");
+  const {user} = useSelector(store => store.auth)
+  const {posts} = useSelector(store=> store.posts)
   const imageRef = useRef();
+
+  const dispatch = useDispatch()
 
   const fileChangeHandler = async (e) => {
     const file = e?.target?.files[0];
@@ -39,6 +45,8 @@ const CreatePost = ({ open, setOpen }) => {
       });
       if(res.data.success){
         toast.success(res.data.message)
+        dispatch(setPosts([res.data.post, ...posts]))
+        setOpen(false)
       }
     } catch (error) {
       console.error(error);
@@ -64,7 +72,7 @@ const CreatePost = ({ open, setOpen }) => {
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div>
-            <h1 className="font-semibold text-xs">Username</h1>
+            <h1 className="font-semibold text-xs">{user?.username}</h1>
             <span className="text-gray-600 text-xs">Bio...</span>
           </div>
         </div>
