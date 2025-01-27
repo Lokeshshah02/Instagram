@@ -131,6 +131,7 @@ export const editProfile = async (req, res) => {
   try {
     const userId = req.id;
     const { bio, gender } = req.body;
+    
     const profilePicture = req.file;
 
     let cloudResponse;
@@ -155,7 +156,7 @@ export const editProfile = async (req, res) => {
 
     return res
       .status(200)
-      .json({ message: "Profile Updated", success: false, user });
+      .json({ message: "Profile Updated", success: true, user });
   } catch (error) {
     console.error(error);
   }

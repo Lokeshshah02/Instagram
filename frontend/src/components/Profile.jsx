@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import useGetUserProfile from "@/hooks/useGetUserProfile";
-import { useParams } from "react-router-dom";
+import { useParams , Link} from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Button } from "./ui/button";
 import { Badge } from "./ui/badge";
@@ -12,9 +12,9 @@ const Profile = () => {
   const userId = params.id;
   useGetUserProfile(userId);
   const [activeTab, setActiveTab] = useState("posts");
-  const { userProfile } = useSelector((store) => store.auth);
+  const { userProfile, user } = useSelector((store) => store.auth);
 
-  const isLoggedInUserProfile = true;
+  const isLoggedInUserProfile = user?._id === userProfile?._id;
   const isFollowing = true;
 
   const handleTabChange = (tab) => {
@@ -42,12 +42,14 @@ const Profile = () => {
                 <span>{userProfile?.username}</span>
                 {isLoggedInUserProfile ? (
                   <>
+                  <Link to='/account/edit'>
                     <Button
                       variant="secondary"
                       className="hover:bg-gray-200 h-8"
                     >
                       Edit profile
                     </Button>
+                      </Link>
                     <Button
                       variant="secondary"
                       className="hover:bg-gray-200 h-8"
@@ -81,19 +83,19 @@ const Profile = () => {
                   <span className="font-semibold">
                     {userProfile?.posts.length}
                   </span>
-                  <span>posts</span>
+                  <span> posts</span>
                 </p>
                 <p>
                   <span className="font-semibold">
                     {userProfile?.followers.length}
                   </span>
-                  <span>followers</span>
+                  <span> followers</span>
                 </p>
                 <p>
                   <span className="font-semibold">
                     {userProfile?.following.length}
                   </span>
-                  <span>following</span>
+                  <span> following</span>
                 </p>
               </div>
               <div className="flex flex-col gap-1">
@@ -140,14 +142,14 @@ const Profile = () => {
                 <div className="absolute inset-0 flex items-center justify-center bg-black bg-opacity-50 opacity-0
                 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="flex items-center text-white space-x-4">
-                   <Button className="flex items-center gap-2 hover:text-gray-300">
+                   <button className="flex items-center gap-2 hover:text-gray-300">
                     <FiHeart/>
                     <span>{post?.likes.length}</span>
-                   </Button>
-                   <Button className="flex items-center gap-2 hover:text-gray-300">
+                   </button>
+                   <button className="flex items-center gap-2 hover:text-gray-300">
                     <FiMessageCircle/>
                     <span>{post?.comments.length}</span>
-                   </Button>
+                   </button>
                   </div>
                 </div>
                 </div>
