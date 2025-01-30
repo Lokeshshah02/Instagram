@@ -100,7 +100,7 @@ const Profile = () => {
               </div>
               <div className="flex flex-col gap-1">
                 <span className="font-semibold">
-                  {userProfile.bio || "bio..."}
+                  {userProfile?.bio || "bio..."}
                 </span>
                 <Badge className="w-fit" variant="secondary">
                   <FiAtSign />

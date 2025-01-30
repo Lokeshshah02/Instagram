@@ -6,10 +6,11 @@ import connectDB from "./utlis/db.js";
 import userRoute from "./routes/user.route.js";
 import postRoute from "./routes/post.route.js";
 import messageRoute from "./routes/message.route.js";
+import { app, server } from "./socket/socket.js";
 
 dotenv.config({});
 
-const app = express();
+// const app = express();
 
 app.use(express.json());
 app.use(cookieParser()); //using it to store the cookies on frontend
@@ -28,7 +29,7 @@ app.use("/api/v1/message", messageRoute);
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
+server.listen(PORT, () => {
   connectDB();
   console.log(`server listen at ${PORT}`);
 });

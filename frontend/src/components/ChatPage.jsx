@@ -1,21 +1,51 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 import { setSelectedUser } from "@/redux/authSlice";
 import { Input } from "./ui/input";
 import { FiMessageCircle } from "react-icons/fi";
 import Messages from "./Messages";
+import { Button } from "./ui/button";
+import { toast } from "sonner";
+import axios from "axios";
+import { setMessages } from "@/redux/chatSlice";
 
 const ChatPage = () => {
   const { user, suggestedUsers, selectedUser } = useSelector(
     (store) => store.auth
   );
-  const isOnline = true;
+  const {onlineUsers, messages} = useSelector(store=>store.chat)
   const dispatch = useDispatch();
+  const [textMessage, setTexMessage] = useState("")
 
-  const selectUserHandler = (user) => {    
+  const selectUserHandler = (user) => {        
     dispatch(setSelectedUser(user));
   };
+
+  const sendMessagehandler = async(receiverId) =>{
+    try{
+      const res= await axios.post(`http://localhost:8000/api/v1/message/send/${receiverId}`, {textMessage},{
+        headers : {
+          'Content-Type' : 'application/json'
+        },
+        withCredentials : true,
+      })
+      if(res.data.success){        
+        setTexMessage("")
+        dispatch(setMessages([...messages, res.data.newMessage]))
+      }
+
+    }catch(error){
+   console.error(error)
+   toast.error(error.response?.data?.message)
+    }
+  }
+
+  useEffect(() =>{
+    return () =>{
+      dispatch(setSelectedUser(null))
+    }
+  },[]);
 
   return (
     <div className="flex ml-[2%] h-screen">
@@ -23,7 +53,8 @@ const ChatPage = () => {
         <h1 className="font-bold mb-4 px-3 text-xl">{user?.username}</h1>
         <hr className="mb-4 border-gray-300" />
         <div className="overflow-y-auto h-[80vh]">
-          {suggestedUsers.map((sug) => {
+          {suggestedUsers?.map((sug) => {
+            const isOnline = onlineUsers.includes(sug._id)
             return (
               <div
                 key={sug._id}
@@ -65,8 +96,9 @@ const ChatPage = () => {
           </div>
           <Messages selectedUser={selectedUser}/>
           <div className="flex items-center p-4 border-t border-gray-300">
-            <Input type="text" className="flex-1 mr-2 focus-visible:ring-transparent"
+            <Input value={textMessage} onChange={(e) => setTexMessage(e.target.value)} type="text" className="flex-1 mr-2 focus-visible:ring-transparent"
             placeholder="Messages..."/>
+            <Button onClick={() => sendMessagehandler(selectedUser?._id)}>Send</Button>
           </div>
         </section>
       ) : (
